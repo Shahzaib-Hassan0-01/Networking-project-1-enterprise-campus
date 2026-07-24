@@ -1,0 +1,219 @@
+!===============================================
+! Device: SW Core
+! Project: NovaFin Enterprise Campus Network
+! Author: Shahzaib Hassan
+! Date: 24/07/2026
+!===============================================
+
+
+
+!
+version 16.3.2
+no service timestamps log datetime msec
+no service timestamps debug datetime msec
+service password-encryption
+!
+hostname SW-Core
+!
+!
+enable secret 5 $1$mERr$K4pB/Hcv7vu.gDyvUsEjC/
+!
+!
+ip dhcp excluded-address 172.16.10.1 172.16.10.20
+ip dhcp excluded-address 172.16.20.1 172.16.20.20
+ip dhcp excluded-address 172.16.30.1 172.16.30.20
+ip dhcp excluded-address 172.16.40.1 172.16.40.20
+ip dhcp excluded-address 172.16.50.1 172.16.50.20
+!
+ip dhcp pool FINANCE_POOL
+ network 172.16.10.0 255.255.255.0
+ default-router 172.16.10.1
+ dns-server 8.8.8.8
+ domain-name novafin.local
+ip dhcp pool ENGINEERING_POOL
+ network 172.16.20.0 255.255.255.0
+ default-router 172.16.20.1
+ dns-server 8.8.8.8
+ domain-name novafin.local
+ip dhcp pool GUEST_POOL
+ network 172.16.30.0 255.255.255.0
+ default-router 172.16.30.1
+ dns-server 8.8.8.8
+ domain-name novafin-guest.local
+ip dhcp pool VOICE_POOL
+ network 172.16.40.0 255.255.255.0
+ default-router 172.16.40.1
+ option 150 ip 172.16.40.1
+!
+!
+!
+no ip cef
+ip routing
+!
+no ipv6 cef
+!
+!
+!
+username shabi-admin privilege 15 secret 5 $1$mERr$aavM2WZr/SbJEBwGjsmj20
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+ip ssh version 2
+ip domain-name novafin.local
+!
+!
+spanning-tree mode pvst
+spanning-tree vlan 1,10,20,30,40,50,99 priority 4096
+!
+!
+!
+!
+!
+!
+interface GigabitEthernet1/0/1
+ description Trunk to SW-Access-1
+ switchport trunk native vlan 99
+ switchport trunk allowed vlan 10,20,30,40,50,99
+ switchport mode trunk
+!
+interface GigabitEthernet1/0/2
+ description Reserved for future EtherChannel expansion
+ shutdown
+!
+interface GigabitEthernet1/0/3
+ switchport trunk native vlan 99
+ switchport trunk allowed vlan 10,20,30,40,50,99
+ switchport mode trunk
+ ip access-group 110 in
+!
+interface GigabitEthernet1/0/4
+!
+interface GigabitEthernet1/0/5
+!
+interface GigabitEthernet1/0/6
+!
+interface GigabitEthernet1/0/7
+!
+interface GigabitEthernet1/0/8
+!
+interface GigabitEthernet1/0/9
+!
+interface GigabitEthernet1/0/10
+!
+interface GigabitEthernet1/0/11
+!
+interface GigabitEthernet1/0/12
+!
+interface GigabitEthernet1/0/13
+!
+interface GigabitEthernet1/0/14
+!
+interface GigabitEthernet1/0/15
+!
+interface GigabitEthernet1/0/16
+!
+interface GigabitEthernet1/0/17
+!
+interface GigabitEthernet1/0/18
+!
+interface GigabitEthernet1/0/19
+!
+interface GigabitEthernet1/0/20
+!
+interface GigabitEthernet1/0/21
+!
+interface GigabitEthernet1/0/22
+!
+interface GigabitEthernet1/0/23
+!
+interface GigabitEthernet1/0/24
+ no switchport
+ ip address 10.1.1.2 255.255.255.252
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet1/1/1
+!
+interface GigabitEthernet1/1/2
+!
+interface GigabitEthernet1/1/3
+!
+interface GigabitEthernet1/1/4
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+interface Vlan10
+ description Finance VLAN Gateway
+ mac-address 00e0.8f0b.0b01
+ ip address 172.16.10.1 255.255.255.0
+!
+interface Vlan20
+ description Engineering VLAN Gateway
+ mac-address 00e0.8f0b.0b02
+ ip address 172.16.20.1 255.255.255.0
+!
+interface Vlan30
+ description Guest VLAN Gateway
+ mac-address 00e0.8f0b.0b03
+ ip address 172.16.30.1 255.255.255.0
+!
+interface Vlan40
+ description Voice VLAN Gateway
+ mac-address 00e0.8f0b.0b04
+ ip address 172.16.40.1 255.255.255.0
+!
+interface Vlan50
+ description Servers VLAN Gateway
+ mac-address 00e0.8f0b.0b05
+ ip address 172.16.50.1 255.255.255.0
+!
+interface Vlan99
+ description Management VLAN Gateway
+ mac-address 00e0.8f0b.0b06
+ ip address 172.16.99.1 255.255.255.0
+!
+ip classless
+ip route 0.0.0.0 0.0.0.0 10.1.1.1 
+!
+ip flow-export version 9
+!
+!
+!
+banner motd #
+******************************************************
+*                                                    *
+*        NovaFin Corporate Network                   *
+*        AUTHORIZED ACCESS ONLY                      *
+*                                                    *
+*  Unauthorized access is strictly prohibited        *
+*  and will be prosecuted to the full extent         *
+*  of the law. All activity is monitored and logged. *
+*                                                    *
+******************************************************
+#
+!
+!
+!
+!
+line con 0
+!
+line aux 0
+!
+line vty 0 4
+ login local
+ transport input ssh
+!
+!
+!
+!
+end
+

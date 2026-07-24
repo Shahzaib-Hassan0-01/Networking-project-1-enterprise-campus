@@ -1,0 +1,178 @@
+!===============================================
+! Device: SW-Access-1
+! Project: NovaFin Enterprise Campus Network
+! Author: Shahzaib Hassan
+! Date: 24/07/2026
+!===============================================
+
+
+
+!
+version 15.0
+no service timestamps log datetime msec
+no service timestamps debug datetime msec
+service password-encryption
+!
+hostname SW-Access-1
+!
+enable secret 5 $1$mERr$K4pB/Hcv7vu.gDyvUsEjC/
+!
+!
+!
+ip ssh version 2
+ip domain-name novafin.local
+!
+username shabi-admin secret 5 $1$mERr$aavM2WZr/SbJEBwGjsmj20
+!
+!
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+spanning-tree vlan 1,10,20,30,40,50,99 priority 8192
+!
+interface FastEthernet0/1
+ description PC1-Finance
+ switchport access vlan 10
+ switchport mode access
+ switchport port-security
+ switchport port-security mac-address sticky 
+ switchport port-security mac-address sticky 00E0.A38D.19B5
+ switchport port-security aging time 60
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+!
+interface FastEthernet0/2
+ description PC2-Engineering
+ switchport access vlan 20
+ switchport mode access
+ switchport port-security
+ switchport port-security mac-address sticky 
+ switchport port-security mac-address sticky 00D0.BC14.7ABB
+ switchport port-security aging time 60
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+!
+interface FastEthernet0/3
+ description IP-Phone-1 with PC3-Finance behind
+ switchport access vlan 10
+ switchport mode access
+ switchport voice vlan 40
+ switchport port-security
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky 
+ switchport port-security violation restrict 
+ switchport port-security mac-address sticky 0001.97B5.6A41
+ switchport port-security mac-address sticky 0030.F23A.2EA0
+ switchport port-security aging time 60
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+!
+interface FastEthernet0/4
+ description LT1-Guest
+ switchport access vlan 30
+ switchport mode access
+ switchport port-security
+ switchport port-security mac-address sticky 
+ switchport port-security violation restrict 
+ switchport port-security mac-address sticky 000B.BE55.C831
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+!
+interface FastEthernet0/5
+ shutdown
+!
+interface FastEthernet0/6
+ shutdown
+!
+interface FastEthernet0/7
+ shutdown
+!
+interface FastEthernet0/8
+ shutdown
+!
+interface FastEthernet0/9
+ shutdown
+!
+interface FastEthernet0/10
+ shutdown
+!
+interface FastEthernet0/11
+ shutdown
+!
+interface FastEthernet0/12
+ shutdown
+!
+interface FastEthernet0/13
+ shutdown
+!
+interface FastEthernet0/14
+ shutdown
+!
+interface FastEthernet0/15
+ shutdown
+!
+interface FastEthernet0/16
+ shutdown
+!
+interface FastEthernet0/17
+ shutdown
+!
+interface FastEthernet0/18
+ shutdown
+!
+interface FastEthernet0/19
+ shutdown
+!
+interface FastEthernet0/20
+ shutdown
+!
+interface FastEthernet0/21
+ shutdown
+!
+interface FastEthernet0/22
+ shutdown
+!
+interface FastEthernet0/23
+ shutdown
+!
+interface FastEthernet0/24
+ shutdown
+!
+interface GigabitEthernet0/1
+ description Trunk to SW-Core
+ switchport trunk native vlan 99
+ switchport trunk allowed vlan 10,20,30,40,50,99
+ switchport mode trunk
+!
+interface GigabitEthernet0/2
+ description Reserved for future EtherChannel expansion
+ shutdown
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+interface Vlan99
+ ip address 172.16.99.3 255.255.255.0
+!
+ip default-gateway 172.16.99.1
+!
+banner motd #
+NovaFin Corporate Network - Authorized Access Only
+#
+!
+!
+!
+line con 0
+!
+line vty 0 4
+ login local
+ transport input ssh
+line vty 5 15
+ login
+!
+!
+!
+!
+end
+

@@ -1,0 +1,115 @@
+!===============================================
+! Device: R1 (Edge Router)
+! Role: Internet gateway with NAT/PAT
+! Project: NovaFin Enterprise Campus Network
+! Author: Shahzaib Hassan
+! Date: 24/07/2026
+!===============================================
+
+
+
+!
+version 15.4
+no service timestamps log datetime msec
+no service timestamps debug datetime msec
+service password-encryption
+!
+hostname R1
+!
+!
+!
+enable secret 5 $1$mERr$K4pB/Hcv7vu.gDyvUsEjC/
+!
+!
+!
+!
+!
+!
+ip cef
+no ipv6 cef
+!
+!
+!
+username shabi-admin privilege 15 secret 5 $1$mERr$aavM2WZr/SbJEBwGjsmj20
+!
+!
+!
+!
+!
+!
+!
+!
+ip ssh version 2
+ip domain-name novafin.local
+!
+!
+spanning-tree mode pvst
+!
+!
+!
+!
+!
+!
+interface GigabitEthernet0/0/0
+ description Link to SW-Core
+ ip address 10.1.1.1 255.255.255.252
+ ip nat inside
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/0/1
+ description Link to ISP
+ ip address 203.0.113.2 255.255.255.252
+ ip nat outside
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/0/2
+ no ip address
+ duplex auto
+ speed auto
+ shutdown
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+ip nat inside source list 1 interface GigabitEthernet0/0/1 overload
+ip classless
+ip route 172.16.0.0 255.255.0.0 10.1.1.2 
+ip route 0.0.0.0 0.0.0.0 203.0.113.1 
+!
+ip flow-export version 9
+!
+!
+access-list 1 remark NAT_TRAFFIC
+access-list 1 permit 172.16.0.0 0.0.255.255
+!
+banner motd #
+******************************************************
+*                                                    *
+*        NovaFin Corporate Network                   *
+*        AUTHORIZED ACCESS ONLY                      *
+*                                                    *
+*  Unauthorized access is strictly prohibited        *
+*  and will be prosecuted to the full extent         *
+*  of the law. All activity is monitored and logged. *
+*                                                    *
+******************************************************
+#
+!
+!
+!
+!
+line con 0
+!
+line aux 0
+!
+line vty 0 4
+ login local
+ transport input ssh
+!
+!
+!
+end
+
